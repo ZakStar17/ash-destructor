@@ -1,0 +1,16 @@
+[package]
+name = "ash_destructor"
+version = "0.1.0"
+edition = "2021"
+
+[[test]]
+name = "tests"
+path = "tests/progress.rs"
+
+[dev-dependencies]
+trybuild = { version = "1.0.49", features = ["diff"] }
+
+[dependencies]
+ash_destructor_derive = { path = "derive" }
+ash = "0.38.0"
+
