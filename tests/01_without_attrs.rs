@@ -10,9 +10,16 @@ impl DeviceDestroyable for ImplDeviceDestroyable {
 }
 
 #[derive(DeviceDestroyable)]
-struct Normal {
-    a: ImplDeviceDestroyable
+struct Named {
+    a: ImplDeviceDestroyable,
+    b: ImplDeviceDestroyable
 }
+
+#[derive(DeviceDestroyable)]
+struct Unnamed(ImplDeviceDestroyable, ImplDeviceDestroyable);
+
+#[derive(DeviceDestroyable)]
+struct Empty;
 
 
 fn main() {
@@ -22,10 +29,15 @@ fn main() {
     let physical_device = unsafe { instance.enumerate_physical_devices().unwrap()[0]};
     let device = unsafe { instance.create_device(physical_device, &vk::DeviceCreateInfo::default(), None).unwrap()};
 
-    let a = Normal {
-        a: ImplDeviceDestroyable {}
+    let named = Named {
+        a: ImplDeviceDestroyable {},
+        b: ImplDeviceDestroyable {}
     };
+    let unnamed = Unnamed(ImplDeviceDestroyable {}, ImplDeviceDestroyable {});
+    let empty = Empty {};
     unsafe {
-        a.destroy_self(&device);
+        named.destroy_self(&device);
+        unnamed.destroy_self(&device);
+        empty.destroy_self(&device);
     }
 }
