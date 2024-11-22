@@ -9,6 +9,7 @@ impl DeviceDestroyable for ImplDeviceDestroyable {
 #[derive(DeviceDestroyable)]
 struct Named {
     a: ImplDeviceDestroyable,
+    #[skip]
     #[skip_remaining]
     b: String,
     c: u32,
