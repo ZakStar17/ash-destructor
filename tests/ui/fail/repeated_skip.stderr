@@ -1,0 +1,15 @@
+error: Multiple #[skip] attributes on a single field
+  --> tests/ui/fail/repeated_skip.rs:12:5
+   |
+12 | /     #[skip]
+13 | |     #[skip]
+14 | |     b: String,
+   | |_____________^
+
+error: Multiple #[skip] attributes on a single field
+  --> tests/ui/fail/repeated_skip.rs:20:5
+   |
+20 | /     #[skip]
+21 | |     #[skip]
+22 | |     String,
+   | |__________^

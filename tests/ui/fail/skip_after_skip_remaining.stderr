@@ -1,0 +1,11 @@
+error: Attribute #[skip] is not allowed after a #[skip_remaining] attribute declaration
+  --> tests/ui/fail/skip_after_skip_remaining.rs:15:5
+   |
+15 |     #[skip]
+   |     ^^^^^^^
+
+error: Attribute #[skip] is not allowed after a #[skip_remaining] attribute declaration
+  --> tests/ui/fail/skip_after_skip_remaining.rs:20:57
+   |
+20 | struct Unnamed(#[skip_remaining] ImplDeviceDestroyable, #[skip] String);
+   |                                                         ^^^^^^^

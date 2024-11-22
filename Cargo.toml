@@ -5,7 +5,7 @@ edition = "2021"
 
 [[test]]
 name = "tests"
-path = "tests/progress.rs"
+path = "tests/ui_tests.rs"
 
 [dev-dependencies]
 trybuild = { version = "1.0.49", features = ["diff"] }
