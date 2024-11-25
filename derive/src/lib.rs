@@ -116,6 +116,20 @@ impl<'a, T: ExactSizeIterator<Item = &'a Field> + DoubleEndedIterator<Item = &'a
             let attrs = &self.field_attributes[i];
 
             if !attrs.skip {
+                // if let syn::Type::Array(ty) = &field.ty {
+
+                //     return Some(if let Some(ident) = field.ident.as_ref() {
+                //         quote::quote_spanned! {field.span() =>
+                //             ash_destructor::DeviceDestroyable::destroy_self(&self.#ident, device);
+                //         }
+                //     } else {
+                //         let tuple_i = syn::Index::from(i);
+                //         quote::quote_spanned! {field.span() =>
+                //             ash_destructor::DeviceDestroyable::destroy_self(&self.#tuple_i, device);
+                //         }
+                //     });
+                // }
+
                 return Some(if let Some(ident) = field.ident.as_ref() {
                     quote::quote_spanned! {field.span() =>
                         ash_destructor::DeviceDestroyable::destroy_self(&self.#ident, device);
