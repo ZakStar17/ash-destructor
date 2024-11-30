@@ -7,15 +7,21 @@ pub trait DeviceDestroyable {
     unsafe fn destroy_self(&self, device: &ash::Device);
 }
 
-
 impl<T: DeviceDestroyable + ?Sized> DeviceDestroyable for &T {
     unsafe fn destroy_self(&self, device: &ash::Device) {
         (*self).destroy_self(device);
     }
 }
 
-
 impl<T: DeviceDestroyable> DeviceDestroyable for [T] {
+    unsafe fn destroy_self(&self, device: &ash::Device) {
+        for item in self.iter().rev() {
+            item.destroy_self(device);
+        }
+    }
+}
+
+impl<T: DeviceDestroyable, const S: usize> DeviceDestroyable for [T; S] {
     unsafe fn destroy_self(&self, device: &ash::Device) {
         for item in self.iter().rev() {
             item.destroy_self(device);

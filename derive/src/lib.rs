@@ -114,50 +114,6 @@ impl<'a, T: ExactSizeIterator<Item = &'a Field> + DoubleEndedIterator<Item = &'a
         loop {
             let (i, field) = self.fields_iter.next()?;
             let attrs = &self.field_attributes[i];
-            let ty = &field.ty;
-
-            // it is not possible to implement the macro for arrays, so as a solution
-            // expand them manually
-            // 
-            // a: [[ImplDeviceDestroyable; 4]; 2] transforms into
-            // for item in &self.a {
-            //     for item in item {
-            //         ash_destructor::DeviceDestroyable::destroy_self(item, device);
-            //     }
-            // }
-            if let syn::Type::Array(ty) = ty {
-                let ident = if let Some(ident) = field.ident.as_ref() {
-                    quote::quote! { &self.#ident }
-                } else {
-                    let tuple_i = syn::Index::from(i);
-                    quote::quote! { &self.#tuple_i }
-                };
-
-                // add innermost stmt
-                let innermost = quote::quote_spanned! {field.span() =>
-                    ash_destructor::DeviceDestroyable::destroy_self(item, device);
-                };
-                let mut incomplete_stream = innermost;
-
-                // add middle composite arrays if they exist
-                // reverse order but it doesn't matter as the types are not used
-                let mut inner_ty = &ty.elem;
-                while let syn::Type::Array(ty) = inner_ty.as_ref() {
-                    inner_ty = &ty.elem;
-                    incomplete_stream = quote::quote_spanned! {field.span() =>
-                        for item in item {
-                            #incomplete_stream
-                        }
-                    };
-                }
-
-                // complete with outermost for loop
-                return Some(quote::quote_spanned! {field.span() =>
-                    for item in #ident {
-                        #incomplete_stream
-                    }
-                });
-            }
 
             if !attrs.skip {
                 return Some(if let Some(ident) = field.ident.as_ref() {

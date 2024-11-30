@@ -8,9 +8,9 @@ use utils::ImplDeviceDestroyable;
 #[derive(DeviceDestroyable)]
 struct Named<'a, 'b, T: DeviceDestroyable, const N: usize> {
     pub a: &'a T,
-    pub b: [[Box<ImplDeviceDestroyable>; 2]; 3],
+    pub b: [[Box<[ImplDeviceDestroyable; 5]>; N]; 3],
     pub c: Option<&'a &'b ImplDeviceDestroyable>,
-    pub d: [T; N],
+    pub d: Option<[T; N]>,
 }
 
 #[derive(DeviceDestroyable)]
