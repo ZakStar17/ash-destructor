@@ -2,26 +2,34 @@ error[E0277]: the trait bound `String: DeviceDestroyable` is not satisfied
   --> tests/ui/fail/trait_not_impl.rs:13:5
    |
 13 |     b: String,
-   |     ^^^^^^^^^ the trait `Destroyable` is not implemented for `String`, which is required by `String: DeviceDestroyable`
+   |     ^^^^^^^^^ the trait `DeviceDestroyable` is not implemented for `String`
    |
    = help: the following other types implement trait `DeviceDestroyable`:
+             &T
+             Box<T>
              ImplDeviceDestroyable
+             LazyCell<T>
              Named
+             OnceCell<T>
+             Option<T>
              Unnamed
-             [T]
-   = note: required for `String` to implement `DeviceDestroyable`
+           and $N others
 
 error[E0277]: the trait bound `String: DeviceDestroyable` is not satisfied
   --> tests/ui/fail/trait_not_impl.rs:16:10
    |
 16 | #[derive(DeviceDestroyable)]
-   |          ^^^^^^^^^^^^^^^^^ the trait `Destroyable` is not implemented for `String`, which is required by `String: DeviceDestroyable`
+   |          ^^^^^^^^^^^^^^^^^ the trait `DeviceDestroyable` is not implemented for `String`
 17 | struct Unnamed(ImplDeviceDestroyable, String);
    |                                       ------ required by a bound introduced by this call
    |
    = help: the following other types implement trait `DeviceDestroyable`:
+             &T
+             Box<T>
              ImplDeviceDestroyable
+             LazyCell<T>
              Named
+             OnceCell<T>
+             Option<T>
              Unnamed
-             [T]
-   = note: required for `String` to implement `DeviceDestroyable`
+           and $N others
