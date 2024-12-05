@@ -29,7 +29,7 @@ impl std::default::Default for ImplDeviceDestroyable {
 }
 
 impl DeviceDestroyable for ImplDeviceDestroyable {
-    unsafe fn destroy_self(&self, _device: &ash::Device) {
+    unsafe fn destroy_self_alloc(&self, _device: &ash::Device, _allocation_callbacks: Option<&ash::vk::AllocationCallbacks<'_>>) {
         if self.destroyed.get() {
             panic!("A double destruction has occurred");
         }

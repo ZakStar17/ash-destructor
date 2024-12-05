@@ -118,12 +118,12 @@ impl<'a, T: ExactSizeIterator<Item = &'a Field> + DoubleEndedIterator<Item = &'a
             if !attrs.skip {
                 return Some(if let Some(ident) = field.ident.as_ref() {
                     quote::quote_spanned! {field.span() =>
-                        ash_destructor::DeviceDestroyable::destroy_self(&self.#ident, device);
+                        ash_destructor::DeviceDestroyable::destroy_self_alloc(&self.#ident, device, allocation_callbacks);
                     }
                 } else {
                     let tuple_i = syn::Index::from(i);
                     quote::quote_spanned! {field.span() =>
-                        ash_destructor::DeviceDestroyable::destroy_self(&self.#tuple_i, device);
+                        ash_destructor::DeviceDestroyable::destroy_self_alloc(&self.#tuple_i, device, allocation_callbacks);
                     }
                 });
             }
@@ -165,7 +165,7 @@ fn impl_macro(ast: &syn::DeriveInput) -> Result<proc_macro::TokenStream, syn::Er
     let stream_errors = errors.iter().map(syn::Error::to_compile_error);
     let gen = quote::quote! {
         impl #impl_generics ash_destructor::DeviceDestroyable for #name #ty_generics #where_clause {
-            unsafe fn destroy_self(&self, device: &ash::Device) {
+            unsafe fn destroy_self_alloc(&self, device: &ash::Device, allocation_callbacks: std::option::Option<&ash::vk::AllocationCallbacks<'_>>) {
                 #(#function_destroy_stmts_iter)*
             }
 

@@ -1,10 +1,9 @@
 use ash_destructor::DeviceDestroyable;
 
-struct ImplDeviceDestroyable {}
+#[path = "../../utils/mod.rs"]
+mod utils;
 
-impl DeviceDestroyable for ImplDeviceDestroyable {
-    unsafe fn destroy_self(&self, _device: &ash::Device) {}
-}
+use utils::ImplDeviceDestroyable;
 
 #[derive(DeviceDestroyable)]
 struct Named {

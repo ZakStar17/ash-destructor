@@ -1,11 +1,11 @@
 error: Multiple #[skip_remaining] attributes in "Named"
-  --> tests/ui/fail/multiple_skip_remaining.rs:16:5
+  --> tests/ui/fail/multiple_skip_remaining.rs:15:5
    |
-16 |     #[skip_remaining]
+15 |     #[skip_remaining]
    |     ^^^^^^^^^^^^^^^^^
 
 error: Multiple #[skip_remaining] attributes in "Unnamed"
-  --> tests/ui/fail/multiple_skip_remaining.rs:24:5
+  --> tests/ui/fail/multiple_skip_remaining.rs:23:5
    |
-24 |     #[skip_remaining]
+23 |     #[skip_remaining]
    |     ^^^^^^^^^^^^^^^^^
