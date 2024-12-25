@@ -7,10 +7,10 @@ use utils::ImplDeviceDestroyable;
 
 #[derive(Default, DeviceDestroyable)]
 struct Named {
-    #[skip]
+    #[destroy_ignore]
     pub a: bool,
     pub b: ImplDeviceDestroyable,
-    #[skip_remaining]
+    #[destroy_ignore_remaining]
     pub c: ImplDeviceDestroyable,
     pub d: usize,
 }
@@ -18,8 +18,8 @@ struct Named {
 #[derive(Default, DeviceDestroyable)]
 struct Unnamed(
     ImplDeviceDestroyable,
-    #[skip] ImplDeviceDestroyable,
-    #[skip_remaining] usize,
+    #[destroy_ignore] ImplDeviceDestroyable,
+    #[destroy_ignore_remaining] usize,
 );
 
 fn main() {

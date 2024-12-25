@@ -1,15 +1,15 @@
-error: Multiple #[skip] attributes on a single field
+error: Multiple #[destroy_ignore] attributes on a single field
   --> tests/ui/fail/repeated_skip.rs:11:5
    |
-11 | /     #[skip]
-12 | |     #[skip]
+11 | /     #[destroy_ignore]
+12 | |     #[destroy_ignore]
 13 | |     b: String,
    | |_____________^
 
-error: Multiple #[skip] attributes on a single field
+error: Multiple #[destroy_ignore] attributes on a single field
   --> tests/ui/fail/repeated_skip.rs:19:5
    |
-19 | /     #[skip]
-20 | |     #[skip]
+19 | /     #[destroy_ignore]
+20 | |     #[destroy_ignore]
 21 | |     String,
    | |__________^

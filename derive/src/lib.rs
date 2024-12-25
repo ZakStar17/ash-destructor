@@ -1,7 +1,7 @@
 use proc_macro2::TokenStream;
 use syn::{spanned::Spanned, Field};
 
-#[proc_macro_derive(DeviceDestroyable, attributes(skip, skip_remaining))]
+#[proc_macro_derive(DeviceDestroyable, attributes(destroy_ignore, destroy_ignore_remaining))]
 pub fn derive_device_destroyable(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let ast = match syn::parse(input) {
         Ok(data) => data,
@@ -14,7 +14,7 @@ pub fn derive_device_destroyable(input: proc_macro::TokenStream) -> proc_macro::
 
 #[derive(Debug, Default)]
 struct FieldAttributes {
-    pub skip: bool,
+    pub destroy_ignore: bool,
 }
 
 fn parse_attributes<'a>(
@@ -23,17 +23,17 @@ fn parse_attributes<'a>(
     errors: &mut Vec<syn::Error>,
 ) -> (Option<usize>, Vec<FieldAttributes>) {
     let mut field_attrs = Vec::with_capacity(fields.len());
-    let mut skip_remaining_index = None;
+    let mut destroy_ignore_remaining_index = None;
 
     for (f_i, field) in fields.enumerate() {
         let mut attrs = FieldAttributes::default();
         for attr in field.attrs.iter() {
-            if attr.path().is_ident("skip_remaining") {
-                if skip_remaining_index.is_some() {
+            if attr.path().is_ident("destroy_ignore_remaining") {
+                if destroy_ignore_remaining_index.is_some() {
                     errors.push(syn::Error::new(
                         attr.span(),
                         format!(
-                            "Multiple #[skip_remaining] attributes in {:?}",
+                            "Multiple #[destroy_ignore_remaining] attributes in {:?}",
                             input_name.to_string()
                         ),
                     ));
@@ -42,37 +42,37 @@ fn parse_attributes<'a>(
                 if let Err(err) = attr.meta.require_path_only() {
                     errors.push(err);
                 }
-                skip_remaining_index = Some(f_i);
+                destroy_ignore_remaining_index = Some(f_i);
             }
         }
 
         for (attr_i, attr) in field.attrs.iter().enumerate() {
-            if attr.path().is_ident("skip") {
-                if let Some(skip_i) = skip_remaining_index {
-                    if skip_i >= attr_i {
+            if attr.path().is_ident("destroy_ignore") {
+                if let Some(destroy_ignore_i) = destroy_ignore_remaining_index {
+                    if destroy_ignore_i >= attr_i {
                         errors.push(syn::Error::new(
                             attr.span(),
-                            "Attribute #[skip] is not allowed after a #[skip_remaining] attribute declaration",
+                            "Attribute #[destroy_ignore] is not allowed after a #[destroy_ignore_remaining] attribute declaration",
                         ));
                     }
                 }
-                if attrs.skip {
+                if attrs.destroy_ignore {
                     errors.push(syn::Error::new(
                         field.span(),
-                        "Multiple #[skip] attributes on a single field",
+                        "Multiple #[destroy_ignore] attributes on a single field",
                     ));
                 }
                 if let Err(err) = attr.meta.require_path_only() {
                     errors.push(err);
                 }
-                attrs.skip = true;
+                attrs.destroy_ignore = true;
             }
         }
 
         field_attrs.push(attrs);
     }
 
-    (skip_remaining_index, field_attrs)
+    (destroy_ignore_remaining_index, field_attrs)
 }
 
 struct FunctionDestroyStmtsFieldIterator<
@@ -89,12 +89,12 @@ impl<'a, T: ExactSizeIterator<Item = &'a Field> + DoubleEndedIterator<Item = &'a
     fn new(
         fields: &'a mut T,
         field_attributes: &'a Vec<FieldAttributes>,
-        skip_everything_after: usize,
+        destroy_ignore_everything_after: usize,
     ) -> Self {
         let fields_len = fields.len();
         let mut fields_iter = fields.enumerate().rev();
-        // skip all elements after skip_everything_after
-        for _ in 0..(fields_len - skip_everything_after) {
+        // destroy_ignore all elements after destroy_ignore_everything_after
+        for _ in 0..(fields_len - destroy_ignore_everything_after) {
             let _ = fields_iter.next();
         }
 
@@ -115,7 +115,7 @@ impl<'a, T: ExactSizeIterator<Item = &'a Field> + DoubleEndedIterator<Item = &'a
             let (i, field) = self.fields_iter.next()?;
             let attrs = &self.field_attributes[i];
 
-            if !attrs.skip {
+            if !attrs.destroy_ignore {
                 return Some(if let Some(ident) = field.ident.as_ref() {
                     quote::quote_spanned! {field.span() =>
                         ash_destructor::DeviceDestroyable::destroy_self_alloc(&self.#ident, device, allocation_callbacks);
@@ -151,13 +151,13 @@ fn impl_macro(ast: &syn::DeriveInput) -> Result<proc_macro::TokenStream, syn::Er
     };
 
     let mut errors = Vec::new();
-    let (skip_after, field_attributes) = parse_attributes(name, &mut fields.iter(), &mut errors);
+    let (destroy_ignore_after, field_attributes) = parse_attributes(name, &mut fields.iter(), &mut errors);
 
     let function_fields_iter = &mut fields.iter();
     let function_destroy_stmts_iter = FunctionDestroyStmtsFieldIterator::new(
         function_fields_iter,
         &field_attributes,
-        skip_after.unwrap_or(fields.len()),
+        destroy_ignore_after.unwrap_or(fields.len()),
     );
 
     let (impl_generics, ty_generics, where_clause) = ast.generics.split_for_impl();

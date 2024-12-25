@@ -8,16 +8,16 @@ use utils::ImplDeviceDestroyable;
 #[derive(DeviceDestroyable)]
 struct Named {
     a: ImplDeviceDestroyable,
-    #[skip]
-    #[skip]
+    #[destroy_ignore]
+    #[destroy_ignore]
     b: String,
 }
 
 #[derive(DeviceDestroyable)]
 struct Unnamed(
     ImplDeviceDestroyable,
-    #[skip]
-    #[skip]
+    #[destroy_ignore]
+    #[destroy_ignore]
     String,
 );
 

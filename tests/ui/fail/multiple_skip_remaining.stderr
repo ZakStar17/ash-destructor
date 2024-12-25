@@ -1,11 +1,11 @@
-error: Multiple #[skip_remaining] attributes in "Named"
+error: Multiple #[destroy_ignore_remaining] attributes in "Named"
   --> tests/ui/fail/multiple_skip_remaining.rs:15:5
    |
-15 |     #[skip_remaining]
-   |     ^^^^^^^^^^^^^^^^^
+15 |     #[destroy_ignore_remaining]
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-error: Multiple #[skip_remaining] attributes in "Unnamed"
+error: Multiple #[destroy_ignore_remaining] attributes in "Unnamed"
   --> tests/ui/fail/multiple_skip_remaining.rs:23:5
    |
-23 |     #[skip_remaining]
-   |     ^^^^^^^^^^^^^^^^^
+23 |     #[destroy_ignore_remaining]
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^

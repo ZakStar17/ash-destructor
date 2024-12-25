@@ -1,17 +1,17 @@
-error: Attribute #[skip] is not allowed after a #[skip_remaining] attribute declaration
+error: Attribute #[destroy_ignore] is not allowed after a #[destroy_ignore_remaining] attribute declaration
   --> tests/ui/fail/skip_after_skip_remaining.rs:11:5
    |
-11 |     #[skip]
-   |     ^^^^^^^
+11 |     #[destroy_ignore]
+   |     ^^^^^^^^^^^^^^^^^
 
-error: Attribute #[skip] is not allowed after a #[skip_remaining] attribute declaration
+error: Attribute #[destroy_ignore] is not allowed after a #[destroy_ignore_remaining] attribute declaration
   --> tests/ui/fail/skip_after_skip_remaining.rs:15:5
    |
-15 |     #[skip]
-   |     ^^^^^^^
+15 |     #[destroy_ignore]
+   |     ^^^^^^^^^^^^^^^^^
 
-error: Attribute #[skip] is not allowed after a #[skip_remaining] attribute declaration
-  --> tests/ui/fail/skip_after_skip_remaining.rs:20:57
+error: Attribute #[destroy_ignore] is not allowed after a #[destroy_ignore_remaining] attribute declaration
+  --> tests/ui/fail/skip_after_skip_remaining.rs:20:67
    |
-20 | struct Unnamed(#[skip_remaining] ImplDeviceDestroyable, #[skip] String);
-   |                                                         ^^^^^^^
+20 | struct Unnamed(#[destroy_ignore_remaining] ImplDeviceDestroyable, #[destroy_ignore] String);
+   |                                                                   ^^^^^^^^^^^^^^^^^

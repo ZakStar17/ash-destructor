@@ -7,20 +7,20 @@ use utils::ImplDeviceDestroyable;
 
 #[derive(DeviceDestroyable)]
 struct Named {
-    #[skip]
+    #[destroy_ignore]
     a: ImplDeviceDestroyable,
-    #[skip_remaining]
+    #[destroy_ignore_remaining]
     b: String,
     c: u32,
-    #[skip_remaining]
+    #[destroy_ignore_remaining]
     d: bool,
 }
 
 #[derive(DeviceDestroyable)]
 struct Unnamed(
     ImplDeviceDestroyable,
-    #[skip_remaining]
-    #[skip_remaining]
+    #[destroy_ignore_remaining]
+    #[destroy_ignore_remaining]
     String,
 );
 
